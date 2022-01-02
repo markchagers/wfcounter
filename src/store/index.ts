@@ -1,8 +1,8 @@
-import { createStore } from "vuex";
+import { createStore } from 'vuex'
+import Letters from './letters'
 
-export default createStore({
-  state: {},
-  mutations: {},
-  actions: {},
-  modules: {},
-});
+const store = createStore({})
+
+new Letters({ store, name: 'letters' })
+
+export default store
