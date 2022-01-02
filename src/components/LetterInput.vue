@@ -16,7 +16,7 @@ export default class LetterInput extends Vue {
     emitletters(): void {
         this.$emit(
             'letterschanged',
-            `${this.inputOwnLetters} ${this.inputLetters}`
+            `${this.inputOwnLetters}${this.inputLetters}`
         )
     }
 }

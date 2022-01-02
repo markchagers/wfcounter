@@ -7,6 +7,11 @@ import { namespace } from 'vuex-class'
 
 const letterModule = namespace('letters')
 
+interface ILetterUpdate {
+    letter: string
+    used: number
+}
+
 @Options({
     name: 'LetterCounter',
     components: {
@@ -15,21 +20,27 @@ const letterModule = namespace('letters')
     },
 })
 export default class LetterCounter extends Vue {
+    @letterModule.Getter('letterlist')
+    letterlist!: ILetter[]
+
     @letterModule.Getter('remainingLetters')
     remainingLetters!: ILetter[]
 
     @letterModule.Action('updateLetter')
-    private updateLetter!: (a: string, change: number) => Promise<void>
+    private updateLetter!: (update: ILetterUpdate) => Promise<void>
 
     updateLetters(letters: string): void {
         const letterArray = letters.split(/\s*/)
         const letterMap = new Map<string, number>()
-
         letterArray.forEach((l: string) => {
             const prop = l.toUpperCase()
             letterMap.set(prop, (letterMap.get(prop) || 0) + 1)
         })
-        letterMap.forEach((c: number, l: string) => this.updateLetter(l, c))
+
+        this.letterlist.forEach((l) => {
+            const prop = l.id
+            this.updateLetter({ letter: prop, used: letterMap.get(prop) || 0 })
+        })
     }
     opponent = ''
 }
@@ -124,7 +135,7 @@ export default class LetterCounter extends Vue {
         line-height: 1.8em;
         @media (min-width: 480px) {
             font-size: 1.5em;
-            line-height: 1.65em;
+            line-height: 1.75em;
         }
     }
     &__punten {

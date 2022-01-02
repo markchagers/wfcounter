@@ -1,7 +1,7 @@
 import { VuexModule, Module, Mutation, Action } from 'vuex-class-modules'
 import { ILetter } from '../typings/i-letter'
 
-@Module({ generateMutationSetters: true })
+@Module()
 export default class Letters extends VuexModule {
     private _letterlist: ILetter[] = [
         {
@@ -184,30 +184,18 @@ export default class Letters extends VuexModule {
         used: number
     }): Promise<void> {
         const il = this._letterlist.find((l) => l.id === payload.letter)
-        const diff = payload.used - (il?.used || 0)
-        for (let i = 0; i < Math.abs(diff); i++) {
-            if (diff > 0) {
-                this.upLetter(payload.letter)
-            } else {
-                this.downLetter(payload.letter)
-            }
+        if (il) {
+            il.used = payload.used
+            this.setLetterUsed(il)
         }
     }
 
     // Mutations
     @Mutation
-    private upLetter(letter: string): void {
-        const il = this._letterlist.find((l) => l.id === letter)
-        if (il) {
-            il.used++
-        }
-    }
-
-    @Mutation
-    private downLetter(letter: string): void {
-        const il = this._letterlist.find((l) => l.id === letter)
-        if (il) {
-            il.used--
+    private setLetterUsed(payload: ILetter): void {
+        const il = this._letterlist.findIndex((l) => l.id === payload.id)
+        if (il > -1) {
+            this._letterlist.splice(il, 1, payload)
         }
     }
 }

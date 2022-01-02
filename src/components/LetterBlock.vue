@@ -33,7 +33,7 @@ export default class LetterBlock extends Vue {
     }
 
     countClass(): string {
-        const remain = this.remaining()
+        const remain = this.letter.aantal - this.letter.used
         if (remain < 0) {
             return remain < -1
                 ? 'block-counter__count error'
@@ -48,10 +48,10 @@ export default class LetterBlock extends Vue {
 </script>
 
 <template>
-    <div :class="blockClass" @click="$emit('addLetter', letter.id)">
+    <div :class="blockClass()" @click="$emit('addLetter', letter.id)">
         <span class="block-counter__letter">{{ letter.id }}</span>
         <span class="block-counter__punten">{{ letter.score }}</span>
-        <span :class="countClass">{{
+        <span :class="countClass()">{{
             remaining() > 1 ? remaining() : ''
         }}</span>
     </div>
