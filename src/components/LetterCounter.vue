@@ -36,7 +36,6 @@ export default class LetterCounter extends Vue {
             const prop = l.toUpperCase()
             letterMap.set(prop, (letterMap.get(prop) || 0) + 1)
         })
-
         this.letterlist.forEach((l) => {
             const prop = l.id
             this.updateLetter({ letter: prop, used: letterMap.get(prop) || 0 })
@@ -77,8 +76,8 @@ export default class LetterCounter extends Vue {
         display: flex;
         flex-flow: row wrap;
         justify-content: space-between;
-        margin: 0 3%;
-        width: 94%;
+        gap: 10px;
+        margin: 0 6%;
         text-align: center;
         margin-bottom: 16px;
         & letter-block {
@@ -95,6 +94,7 @@ export default class LetterCounter extends Vue {
 
     &__wf-input {
         font-family: 'Source Code Pro', 'Courier New', Courier, monospace;
+        line-height: 1.6rem;
         font-size: 1.4em;
         text-transform: uppercase;
         letter-spacing: 0.3em;
@@ -153,7 +153,8 @@ export default class LetterCounter extends Vue {
         width: 0.95rem;
         line-height: 1rem;
         background-color: #c41414;
-        border: 0.1rem solid #fff;
+        border: 0.1rem solid;
+        border-color: #f75d5d #a80c0c #8d0303 #e94545;
         border-radius: 50%;
         position: absolute;
         bottom: -5px;
@@ -161,14 +162,14 @@ export default class LetterCounter extends Vue {
         text-align: center;
         font-size: 0.8rem;
         font-weight: 700;
-        color: #ffffff;
+        color: #fafdd8;
         box-shadow: 1px 2px 4px #00000099;
         font-size: 0.6em;
         @media (min-width: 480px) {
             font-size: 0.65em;
         }
         &.error {
-            color: #9effa2;
+            color: #fffebf;
         }
         &--hide {
             display: none;
