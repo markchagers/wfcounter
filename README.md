@@ -2,7 +2,7 @@
 
 This is a little fun project I've been using to explore Vue 3 with typescript and vue-class-component and vue-property-decorator thrown in. 
 
-You can see it working here:
+You can see it working [HERE](https://marksman-do.nl/wfcounter/)
 
 The idea is that you input the letters in your Wordfeud game and automatically see which letters are still available.
 
