@@ -10,6 +10,13 @@ This started out as a vue 2 project, but I wanted to take advantage of typescrip
 
 If I have time and I feel motivated, I may add more functionality such as the ability to save a game in progress.
 
+## Ideas
+
+- Save game
+- Tiled input field
+- Better Mobile support
+- Read Screenshot
+
 ## Project setup
 ```
 npm install
