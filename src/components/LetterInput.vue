@@ -1,25 +1,14 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-class-component'
+<script setup lang="ts">
+    const emit = defineEmits<{
+    (e: 'letterschanged', value: string): void
+    }>()
 
-@Options({
-    name: 'LetterInput',
-})
-export default class LetterInput extends Vue {
-    inputLetters = ''
-    inputOwnLetters = ''
+    let inputLetters: string = ''
+    let inputOwnLetters: string = ''
 
-    letterschanged(payload: { letters: string }): boolean {
-        // perform runtime validation
-        return payload.letters.length > 0
+    const emitletters = (): void => {
+        emit('letterschanged', `${inputOwnLetters}${inputLetters}`)
     }
-
-    emitletters(): void {
-        this.$emit(
-            'letterschanged',
-            `${this.inputOwnLetters}${this.inputLetters}`
-        )
-    }
-}
 </script>
 
 <template>
@@ -28,7 +17,7 @@ export default class LetterInput extends Vue {
         <textarea
             v-model="inputLetters"
             class="block-counter__wf-input"
-            @input="emitletters()"
+            @input="emitletters"
             rows="15"
             cols="24"
         ></textarea>

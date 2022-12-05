@@ -1,39 +1,24 @@
-<script lang="ts">
-import { PropType } from 'vue'
-import { Options, Vue } from 'vue-class-component'
-import { Prop } from 'vue-property-decorator'
-import { ILetter } from '../typings/i-letter'
+<script setup lang="ts">
 
-@Options({
-    name: 'LetterBlock',
-})
-export default class LetterBlock extends Vue {
-    @Prop({
-        type: Object as PropType<ILetter>,
-        required: true,
-        default: () => ({
-            id: '.',
-            name: 'blanco',
-            aantal: 2,
-            score: 0,
-            used: 0,
-        }),
-        validator: (letter: ILetter) => !!letter.id,
-    })
-    letter!: ILetter
-
-    remaining(): number {
-        return Math.abs(this.letter.aantal - this.letter.used)
+    interface ILetter {
+        id: string
+        aantal: number
+        score: number
+        used: number
     }
 
-    blockClass(): string {
-        return this.letter.aantal < this.letter.used
-            ? 'block-counter__blokje error'
-            : 'block-counter__blokje'
-    }
+    const props = defineProps<{
+        letter: ILetter
+    }>()
 
-    countClass(): string {
-        const remain = this.letter.aantal - this.letter.used
+    const remaining = (): number => Math.abs(props.letter.aantal - props.letter.used)
+
+    const blockClass = (): string => props.letter.aantal < props.letter.used
+        ? 'block-counter__blokje error'
+        : 'block-counter__blokje'
+
+    const countClass = (): string => {
+        const remain = props.letter.aantal - props.letter.used
         if (remain < 0) {
             return remain < -1
                 ? 'block-counter__count error'
@@ -44,7 +29,6 @@ export default class LetterBlock extends Vue {
                 : 'block-counter__count--hide'
         }
     }
-}
 </script>
 
 <template>

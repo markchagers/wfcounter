@@ -1,48 +1,24 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-class-component'
-import { ILetter } from '../typings/i-letter'
-import LetterBlock from './LetterBlock.vue'
-import LetterInput from './LetterInput.vue'
-import { namespace } from 'vuex-class'
+<script setup lang="ts">
+    import LetterBlock from './LetterBlock.vue'
+    import LetterInput from './LetterInput.vue'
+    import { useLetterStore } from '../stores/letters'
 
-const letterModule = namespace('letters')
+    const store = useLetterStore()
+    
+    const opponent: string = ''
 
-interface ILetterUpdate {
-    letter: string
-    used: number
-}
-
-@Options({
-    name: 'LetterCounter',
-    components: {
-        LetterBlock,
-        LetterInput,
-    },
-})
-export default class LetterCounter extends Vue {
-    @letterModule.Getter('letterlist')
-    letterlist!: ILetter[]
-
-    @letterModule.Getter('remainingLetters')
-    remainingLetters!: ILetter[]
-
-    @letterModule.Action('updateLetter')
-    private updateLetter!: (update: ILetterUpdate) => Promise<void>
-
-    updateLetters(letters: string): void {
+    const updateLetters = (letters: string): void => {
         const letterArray = letters.split(/\s*/)
         const letterMap = new Map<string, number>()
         letterArray.forEach((l: string) => {
             const prop = l.toUpperCase()
             letterMap.set(prop, (letterMap.get(prop) || 0) + 1)
         })
-        this.letterlist.forEach((l) => {
-            const prop = l.id
-            this.updateLetter({ letter: prop, used: letterMap.get(prop) || 0 })
+        store.letterlist.forEach(l=> {
+            const prop = l.id.toUpperCase()
+            store.updateLetter({ letter: prop, used: letterMap.get(prop) || 0 })
         })
     }
-    opponent = ''
-}
 </script>
 
 <template>
@@ -54,12 +30,12 @@ export default class LetterCounter extends Vue {
         <div>Hier zie je de letters die nog over zijn (aantal linksonder):</div>
         <div class="block-counter__letters">
             <letter-block
-                v-for="letter in remainingLetters"
+                v-for="letter in store.remainingLetters"
                 :key="letter.id"
                 :letter="letter"
             ></letter-block>
         </div>
-        <letter-input @letterschanged="updateLetters"></letter-input>
+        <LetterInput @letterschanged="updateLetters($event)"></LetterInput>
     </div>
 </template>
 
