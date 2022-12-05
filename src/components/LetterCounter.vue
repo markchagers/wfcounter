@@ -5,7 +5,7 @@
 
     const store = useLetterStore()
     
-    const opponent: string = ''
+    let opponent: string = ''
 
     const updateLetters = (letters: string): void => {
         const letterArray = letters.split(/\s*/)
