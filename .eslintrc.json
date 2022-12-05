@@ -6,9 +6,6 @@
         "eslint:recommended",
         "@vue/eslint-config-typescript"
     ],
-    "rules": {
-        "tabWidth": 4
-    },
     "parserOptions": {     
         "ecmaVersion": "latest"
     }
