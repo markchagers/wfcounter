@@ -38,6 +38,11 @@
     const setCellFocus = (focus: { col: number, row: number }): void => {
         focusedCell.value = focus
     }
+
+    const setLetter = (opts: { letter: string, col: number, row: number }): void => {
+        /** why? */
+        // const oldLetter: ILetter = rows[opts.row as keyof Array<Row>][opts.col as keyof Array<Cell>].letter
+    }
 </script>
 
 <template>
@@ -47,7 +52,9 @@
             :key="`${cell.row}-${cell.col}`" 
             :cell="cell"
             :focusedcell="focusedCell"
-            @movefocus="setCellFocus($event)"></LetterTile>
+            @movefocus="setCellFocus($event)"
+            @setletter="setLetter($event)"
+            ></LetterTile>
         </div>
     </div>
 </template>

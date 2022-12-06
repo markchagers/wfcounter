@@ -16,7 +16,8 @@ import { ref, watch } from 'vue';
     }
 
     const emit = defineEmits<{
-        (e: 'movefocus', value: { col: number; row: number }): void
+        (e: 'movefocus', value: { col: number; row: number }): void,
+        (e: 'setletter', value: { letter: string, col: number; row: number }): void
     }>()
 
     const props = defineProps<{
@@ -33,22 +34,21 @@ import { ref, watch } from 'vue';
     let letter: ILetter;
     const setFocus = () => tilediv.value?.focus()
     const listen = (evt: KeyboardEvent) => {
-        const nwFocus = { col: props.cell.col, row: props.cell.row }
         switch (evt.key) {
             case 'ArrowUp':
-                nwFocus.row -= 1
-            break
+                moveFocus(props.cell.col, props.cell.row - 1)
+                break
                 
             case 'ArrowDown':
-                nwFocus.row += 1
-            break
-
+                moveFocus(props.cell.col, props.cell.row + 1)
+                break
+                
             case 'ArrowLeft':
-                nwFocus.col -= 1
-            break
+                moveFocus(props.cell.col - 1, props.cell.row)
+                break
                 
             case 'ArrowRight':
-                nwFocus.col += 1
+                moveFocus(props.cell.col + 1, props.cell.row)
             break
                 
             default:
@@ -61,9 +61,15 @@ import { ref, watch } from 'vue';
                     }
                     letter = nwLetter
                 }
+                emit('setletter', { letter: letter.id, col: props.cell.col, row: props.cell.row })
             break
         }
-        emit('movefocus', nwFocus)
+    }
+
+    const moveFocus = (col: number, row: number): void => {
+        col = Math.max(0, Math.min(14,  col))
+        row = Math.max(0, Math.min(14,  row))
+        emit('movefocus', { col, row })
     }
 </script>
 
