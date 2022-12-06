@@ -1,6 +1,6 @@
 <script setup lang="ts">
     const emit = defineEmits<{
-    (e: 'letterschanged', value: string): void
+        (e: 'letterschanged', value: string): void
     }>()
 
     let inputLetters: string = ''

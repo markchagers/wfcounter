@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import LetterBlock from './LetterBlock.vue'
     import LetterInput from './LetterInput.vue'
+    import TiledBoard from './TiledBoard.vue'
     import { useLetterStore } from '../stores/letters'
 
     const store = useLetterStore()
@@ -35,6 +36,7 @@
                 :letter="letter"
             ></letter-block>
         </div>
+        <TiledBoard></TiledBoard>
         <LetterInput @letterschanged="updateLetters($event)"></LetterInput>
     </div>
 </template>
@@ -43,8 +45,11 @@
 .block-counter {
     margin: 0;
     padding: 0;
-    text-align: center;
     width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+
     &__header {
         margin-bottom: 6px;
     }
