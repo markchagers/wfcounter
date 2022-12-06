@@ -19,15 +19,23 @@ export const useLetterStore = defineStore('letters', {
         },
         remainingLetters(state) {
             return state.letterlist.filter(l => l.used !== l.aantal)
+        },
+        usedLetters(state) {
+            return state.letterlist.filter(l => l.used > 0)
         }
     },
 
     actions: {
-        updateLetter(payload: { letter: string; used: number }): void {
-            const il = this.letters.find((l) => l.id === payload.letter)
+        updateLetter(payload: { letter: string; oldletter?: string }): void {
+            const il = this.letterlist.find((l) => l.id === payload.letter.toUpperCase())
             if (il) {
-                const idx = this.letters.findIndex((l) => l.id === il.id)
-                this.letters.splice(idx, 1, { id: il.id, aantal: il.aantal, score: il.score, used: payload.used })
+                il.used += 1
+            }
+            if (payload.oldletter) {
+                const ol = this.letterlist.find((l) => l.id === payload.oldletter?.toUpperCase())
+                if (ol) {
+                    ol.used -= 1
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch } from 'vue'
+import { useLetterStore } from '@/stores/letters'
 
     interface ILetter {
         id: string
@@ -16,8 +17,7 @@ import { ref, watch } from 'vue';
     }
 
     const emit = defineEmits<{
-        (e: 'movefocus', value: { col: number; row: number }): void,
-        (e: 'setletter', value: { letter: string, col: number; row: number }): void
+        (e: 'movefocus', value: { col: number; row: number }): void
     }>()
 
     const props = defineProps<{
@@ -31,21 +31,21 @@ import { ref, watch } from 'vue';
         }
     })
     const tilediv = ref<HTMLDivElement>()
-    let letter: ILetter;
+    const letter = ref<ILetter>();
     const setFocus = () => tilediv.value?.focus()
     const listen = (evt: KeyboardEvent) => {
         switch (evt.key) {
             case 'ArrowUp':
                 moveFocus(props.cell.col, props.cell.row - 1)
-                break
+            break
                 
             case 'ArrowDown':
                 moveFocus(props.cell.col, props.cell.row + 1)
-                break
+            break
                 
             case 'ArrowLeft':
                 moveFocus(props.cell.col - 1, props.cell.row)
-                break
+            break
                 
             case 'ArrowRight':
                 moveFocus(props.cell.col + 1, props.cell.row)
@@ -53,46 +53,49 @@ import { ref, watch } from 'vue';
                 
             default:
                 if (/[a-z]/i.test(evt.key)) {
-                    const nwLetter: ILetter ={ 
+                    const store = useLetterStore()
+                    if (letter.value) {
+                        store.updateLetter({ letter: evt.key, oldletter: letter.value.id })
+                    } else {
+                        store.updateLetter({ letter: evt.key })
+                    }
+                    const nwLetter: ILetter = { 
                         id: evt.key,
                         aantal: 0,
                         score: 3,
                         used: 1
                     }
-                    letter = nwLetter
+                    letter.value = nwLetter
                 }
-                emit('setletter', { letter: letter.id, col: props.cell.col, row: props.cell.row })
             break
         }
     }
 
     const moveFocus = (col: number, row: number): void => {
-        col = Math.max(0, Math.min(14,  col))
-        row = Math.max(0, Math.min(14,  row))
         emit('movefocus', { col, row })
     }
 </script>
 
 <template>
 
-    <div class="tile" ref="tilediv" @click="setFocus" @keydown.stop="listen($event)" tabindex="-1">
+    <div class="tile" ref="tilediv" @click="setFocus" @keydown.prevent="listen($event)" tabindex="-1">
         <div v-if="!letter" :class="cell.cellClass"></div>
-        <div v-else class="white">{{ letter.id }}</div>
+        <div v-else class="white">{{ letter.id.toUpperCase() }}</div>
     </div>
 
 </template>
 
 <style lang="scss">
 .tile {
-    background: linear-gradient(#222, #303030);
-    flex: 0 0 35px;
+    background: linear-gradient(#222, #282828);
+    flex: 0 0 28px;
     color: white;
     margin: -1px;
     border: 2px solid black;
     border-radius: 4px;
     font-weight: 900;
-    font-size: 14px;
-    line-height: 33px;
+    font-size: 12px;
+    line-height: 26px;
     transition: .25s;
 
     &:focus {
@@ -103,41 +106,46 @@ import { ref, watch } from 'vue';
 
     .dw {
         border-radius: 3px;
-        background: linear-gradient( #ad681c, #c37828);
+        background: linear-gradient(#ad681c, #c37828);
+
         &::before {
             content: 'DW';
         }
     }
-    
+
     .tw {
         border-radius: 3px;
-        background: linear-gradient( #6e3131, #7e3b3b);
+        background: linear-gradient(#6e3131, #7e3b3b);
+
         &::before {
             content: 'TW';
         }
     }
-    
+
     .dl {
         border-radius: 3px;
-        background: linear-gradient( #66905c, #6b9661);
+        background: linear-gradient(#66905c, #6b9661);
+
         &::before {
             content: 'DL';
         }
     }
-    
+
     .tl {
         border-radius: 3px;
-        background: linear-gradient( #405690,  #475d9c);
+        background: linear-gradient(#405690, #475d9c);
+
         &::before {
             content: 'TL';
         }
     }
-    
+
     .white {
-        font-size: 1.2em;
+        font-size: 1.4em;
+        font-weight: 600;
         border-radius: 3px;
         color: #222;
-        background: linear-gradient( #e9eefa,  #d1dbf7);
+        background: linear-gradient(#fcffe6, #fefef4);
     }
 }
 </style>

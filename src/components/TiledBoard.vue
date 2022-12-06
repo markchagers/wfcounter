@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import { useBoardStore } from '@/stores/board'
     import { ref } from 'vue';
+    import { useLetterStore } from '../stores/letters';
     import LetterTile from './LetterTile.vue'
 
     interface ILetter {
@@ -24,6 +25,7 @@
     const rows: Row[] = []
 
     const store = useBoardStore()
+    const letterStore = useLetterStore()
     const focusedCell = ref<Cell>({ col: 0, row: 0 })
 
     for (let r = 0; r < 15; r++) {
@@ -39,10 +41,6 @@
         focusedCell.value = focus
     }
 
-    const setLetter = (opts: { letter: string, col: number, row: number }): void => {
-        /** why? */
-        // const oldLetter: ILetter = rows[opts.row as keyof Array<Row>][opts.col as keyof Array<Cell>].letter
-    }
 </script>
 
 <template>
@@ -53,25 +51,25 @@
             :cell="cell"
             :focusedcell="focusedCell"
             @movefocus="setCellFocus($event)"
-            @setletter="setLetter($event)"
             ></LetterTile>
         </div>
     </div>
 </template>
 
 <style lang="scss">
-.board {
-    background-color: #222;
-    border: 4px solid black;
-    align-self: auto;
-    width: 555px;
-    display: flex;
-    flex-flow: column nowrap;
-
-    &__row {
-        flex: 0 0 35px;
+    .board {
+        margin: 0 auto;
+        width: 450px;
+        background-color: #222;
+        border: 4px solid black;
         display: flex;
-        flex-flow: row nowrap;
+        flex-flow: column nowrap;
+    
+        &__row {
+            flex: 1 1 28px;
+            width: fit-content;
+            display: flex;
+            flex-flow: row nowrap;
+        }
     }
-}
 </style>

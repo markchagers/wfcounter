@@ -17,7 +17,7 @@
         })
         store.letterlist.forEach(l=> {
             const prop = l.id.toUpperCase()
-            store.updateLetter({ letter: prop, used: letterMap.get(prop) || 0 })
+            store.updateLetter({ letter: prop })
         })
     }
 </script>
@@ -130,12 +130,10 @@
         }
     }
     &__count {
-        height: 0.9rem;
-        width: 0.95rem;
-        line-height: 1rem;
+        height: 1.1rem;
+        width: 1.1rem;
+        line-height: 1.2rem;
         background-color: #c41414;
-        border: 0.1rem solid;
-        border-color: #f75d5d #a80c0c #8d0303 #e94545;
         border-radius: 50%;
         position: absolute;
         bottom: -5px;
