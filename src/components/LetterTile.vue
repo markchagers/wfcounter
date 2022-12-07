@@ -34,6 +34,7 @@ import { useLetterStore } from '@/stores/letters'
     const letter = ref<ILetter>();
     const setFocus = () => tilediv.value?.focus()
     const listen = (evt: KeyboardEvent) => {
+        const store = useLetterStore()
         switch (evt.key) {
             case 'ArrowUp':
                 moveFocus(props.cell.col, props.cell.row - 1)
@@ -51,9 +52,16 @@ import { useLetterStore } from '@/stores/letters'
                 moveFocus(props.cell.col + 1, props.cell.row)
             break
                 
+            case 'Delete':
+            case 'Backspace':
+                if (letter.value) {
+                    store.updateLetter({ oldletter: letter.value.id })
+                    letter.value = undefined
+                }
+            break
+            
             default:
-                if (/[a-z]/i.test(evt.key)) {
-                    const store = useLetterStore()
+                if (/^[a-z]{1}$/i.test(evt.key)) {
                     if (letter.value) {
                         store.updateLetter({ letter: evt.key, oldletter: letter.value.id })
                     } else {
@@ -66,6 +74,9 @@ import { useLetterStore } from '@/stores/letters'
                         used: 1
                     }
                     letter.value = nwLetter
+                } else {
+                    console.log('mark', evt.key);
+                    
                 }
             break
         }
@@ -97,6 +108,7 @@ import { useLetterStore } from '@/stores/letters'
     font-size: 12px;
     line-height: 26px;
     transition: .25s;
+    position: relative;
 
     &:focus {
         z-index: 1;
@@ -137,6 +149,17 @@ import { useLetterStore } from '@/stores/letters'
 
         &::before {
             content: 'TL';
+        }
+    }
+
+    .cc {
+        border-radius: 3px;
+        background: linear-gradient(#233462, #2c3c69);
+        color: #c47893;
+        font-size: 1.5em;
+
+        &::before {
+            content: '❖';
         }
     }
 

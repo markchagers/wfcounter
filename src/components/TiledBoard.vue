@@ -1,7 +1,6 @@
 <script setup lang="ts">
     import { useBoardStore } from '@/stores/board'
     import { ref } from 'vue';
-    import { useLetterStore } from '../stores/letters';
     import LetterTile from './LetterTile.vue'
 
     interface ILetter {
@@ -25,7 +24,6 @@
     const rows: Row[] = []
 
     const store = useBoardStore()
-    const letterStore = useLetterStore()
     const focusedCell = ref<Cell>({ col: 0, row: 0 })
 
     for (let r = 0; r < 15; r++) {

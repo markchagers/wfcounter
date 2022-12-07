@@ -26,10 +26,12 @@ export const useLetterStore = defineStore('letters', {
     },
 
     actions: {
-        updateLetter(payload: { letter: string; oldletter?: string }): void {
-            const il = this.letterlist.find((l) => l.id === payload.letter.toUpperCase())
-            if (il) {
-                il.used += 1
+        updateLetter(payload: { letter?: string; oldletter?: string }): void {
+            if (payload.letter) {
+                const il = this.letterlist.find((l) => l.id === payload.letter?.toUpperCase())
+                if (il) {
+                    il.used += 1
+                }
             }
             if (payload.oldletter) {
                 const ol = this.letterlist.find((l) => l.id === payload.oldletter?.toUpperCase())
