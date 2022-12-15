@@ -3,23 +3,15 @@
     import LetterInput from './LetterInput.vue'
     import TiledBoard from './TiledBoard.vue'
     import { useLetterStore } from '../stores/letters'
+    import { onMounted } from 'vue';
 
+    let opponent: string = ''
     const store = useLetterStore()
     
-    let opponent: string = ''
-
-    const updateLetters = (letters: string): void => {
-        const letterArray = letters.split(/\s*/)
-        const letterMap = new Map<string, number>()
-        letterArray.forEach((l: string) => {
-            const prop = l.toUpperCase()
-            letterMap.set(prop, (letterMap.get(prop) || 0) + 1)
-        })
-        store.letterlist.forEach(l=> {
-            const prop = l.id.toUpperCase()
-            store.updateLetter({ letter: prop })
-        })
-    }
+    onMounted(() => {
+        store.init()
+        opponent = ''
+    })
 </script>
 
 <template>
@@ -37,7 +29,7 @@
             ></letter-block>
         </div>
         <TiledBoard></TiledBoard>
-        <LetterInput @letterschanged="updateLetters($event)"></LetterInput>
+        <LetterInput></LetterInput>
     </div>
 </template>
 
@@ -74,8 +66,11 @@
     }
 
     &__wf-input {
-        font-family: 'Source Code Pro', 'Courier New', Courier, monospace;
-        line-height: 1.6rem;
+        font-family: "Avenir", Helvetica, Arial, sans-serif;
+        width: 8em;
+        text-align: center;
+        min-width: 160px;
+        line-height: 1.3em;
         font-size: 1.4em;
         text-transform: uppercase;
         letter-spacing: 0.3em;

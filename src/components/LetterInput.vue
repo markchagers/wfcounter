@@ -44,14 +44,12 @@
 <template>
     <div>
         <div>type hier de letters die je zelf hebt:</div>
-        <textarea
+        <input type="text"
             v-model="inputOwnLetters"
             class="block-counter__wf-input"
             @keydown="checkInput"
             @input="updateletters"
             maxlength="7"
-            rows="1"
-            cols="10"
-        ></textarea>
+        >
     </div>
 </template>

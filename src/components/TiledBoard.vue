@@ -25,6 +25,7 @@
 
     const store = useBoardStore()
     const focusedCell = ref<Cell>({ col: 0, row: 0 })
+    const focusDelta = ref<Cell>({ col: 0, row: 0 })
 
     for (let r = 0; r < 15; r++) {
         const row: Row = { id: `row_${r + 1}`, cells: [] }
@@ -37,8 +38,19 @@
 
     const setCellFocus = (focus: { col: number, row: number }): void => {
         focusedCell.value = focus
+        focusDelta.value = { col: 0, row: 0 }
     }
 
+    const moveCellFocus = (focus: { col: number, row: number }): void => {
+        focusDelta.value = focus
+        setLetter()
+    }
+
+    const setLetter = () => {
+        const col = focusedCell.value.col + focusDelta.value.col
+        const row = focusedCell.value.row + focusDelta.value.row  
+        focusedCell.value = { col, row }
+    }
 </script>
 
 <template>
@@ -48,7 +60,9 @@
             :key="`${cell.row}-${cell.col}`" 
             :cell="cell"
             :focusedcell="focusedCell"
-            @movefocus="setCellFocus($event)"
+            @movefocus="moveCellFocus($event)"
+            @setfocus="setCellFocus($event)"
+            @setletter="setLetter"
             ></LetterTile>
         </div>
     </div>

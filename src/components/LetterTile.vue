@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import { useLetterStore } from '@/stores/letters'
 
     interface ILetter {
@@ -17,7 +17,9 @@ import { useLetterStore } from '@/stores/letters'
     }
 
     const emit = defineEmits<{
+        (e: 'setfocus', value: { col: number; row: number }): void
         (e: 'movefocus', value: { col: number; row: number }): void
+        (e: 'setletter'): void
     }>()
 
     const props = defineProps<{
@@ -27,29 +29,34 @@ import { useLetterStore } from '@/stores/letters'
 
     watch(() => props.focusedcell, (focusedCell) => {
         if (focusedCell.col === props.cell.col && focusedCell.row === props.cell.row) {
-            setFocus()
+            tilediv.value?.focus()
         }
     })
     const tilediv = ref<HTMLDivElement>()
     const letter = ref<ILetter>();
-    const setFocus = () => tilediv.value?.focus()
+
+    const setFocus = () => {
+        tilediv.value?.focus()
+        emit('setfocus', { col: props.cell.col, row: props.cell.row })
+    }
+
     const listen = (evt: KeyboardEvent) => {
         const store = useLetterStore()
         switch (evt.key) {
             case 'ArrowUp':
-                moveFocus(props.cell.col, props.cell.row - 1)
-            break
+                emit('movefocus', { col: 0, row: -1 })
+                break
                 
             case 'ArrowDown':
-                moveFocus(props.cell.col, props.cell.row + 1)
-            break
+                emit('movefocus', { col: 0, row: 1 })
+                break
                 
             case 'ArrowLeft':
-                moveFocus(props.cell.col - 1, props.cell.row)
-            break
+                emit('movefocus', { col: -1, row: 0 })
+                break
                 
             case 'ArrowRight':
-                moveFocus(props.cell.col + 1, props.cell.row)
+                emit('movefocus', { col: 1, row: 0 })
             break
                 
             case 'Delete':
@@ -57,6 +64,7 @@ import { useLetterStore } from '@/stores/letters'
                 if (letter.value) {
                     store.updateLetter({ oldletter: letter.value.id })
                     letter.value = undefined
+                    emit('setletter')
                 }
             break
             
@@ -67,33 +75,29 @@ import { useLetterStore } from '@/stores/letters'
                     } else {
                         store.updateLetter({ letter: evt.key })
                     }
+                    const storeLetter = store.letterById(evt.key)
                     const nwLetter: ILetter = { 
                         id: evt.key,
-                        aantal: 0,
-                        score: 3,
-                        used: 1
+                        aantal: storeLetter?.aantal ?? 0,
+                        score: storeLetter?.score ?? 0,
+                        used: storeLetter?.used ?? 0
                     }
                     letter.value = nwLetter
-                } else {
-                    console.log('mark', evt.key);
-                    
+                    nextTick(() => emit('setletter'))
                 }
             break
         }
     }
-
-    const moveFocus = (col: number, row: number): void => {
-        emit('movefocus', { col, row })
-    }
 </script>
 
 <template>
-
     <div class="tile" ref="tilediv" @click="setFocus" @keydown.prevent="listen($event)" tabindex="-1">
         <div v-if="!letter" :class="cell.cellClass"></div>
-        <div v-else class="white">{{ letter.id.toUpperCase() }}</div>
+        <div v-else class="white">
+            <span>{{ letter.id.toUpperCase() }}</span>
+            <span class="score">{{ letter.score || '' }}</span>
+        </div>
     </div>
-
 </template>
 
 <style lang="scss">
@@ -172,6 +176,14 @@ import { useLetterStore } from '@/stores/letters'
         border-radius: 3px;
         color: #222;
         background: linear-gradient(#fcffe6, #fefef4);
+
+        .score {
+            position: absolute;
+            line-height: .7em;
+            top: 2px;
+            right: 1px;
+            font-size: .6em;
+        }
     }
 }
 </style>
