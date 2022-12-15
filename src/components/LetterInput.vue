@@ -1,33 +1,55 @@
 <script setup lang="ts">
-    const emit = defineEmits<{
-    (e: 'letterschanged', value: string): void
-    }>()
+    import { useLetterStore } from '../stores/letters';
 
-    let inputLetters: string = ''
-    let inputOwnLetters: string = ''
+    const store = useLetterStore()
+    let inputOwnLetters = ''
+    let currentLetters = ''
 
-    const emitletters = (): void => {
-        emit('letterschanged', `${inputOwnLetters}${inputLetters}`)
+    const diffString = (subject: string, compare: string) => {
+        const result: string[] = subject.split('')
+        compare.split('').forEach(l => {
+            if (result.includes(l)) {
+                result.splice(result.indexOf(l), 1)
+            }
+        })
+        return result.join('')
+    }
+
+    const checkInput = (evt: KeyboardEvent) => {
+        switch (evt.key) {
+            case 'ArrowLeft':
+            case 'ArrowRight':
+            case 'Delete':
+            case 'Backspace':
+                /** do nothing */
+            break
+            default:
+                if (/^[a-z.]$/i.test(evt.key)) {
+                    /** do nothing */
+                } else {
+                    evt.preventDefault()
+                }
+            break
+        }
+    }
+
+    const updateletters = (): void => {
+        const newLetter = diffString(inputOwnLetters, currentLetters)
+        const oldLetter = diffString(currentLetters, inputOwnLetters)
+        store.updateLetter({ letter: newLetter, oldletter: oldLetter })
+        currentLetters = inputOwnLetters
     }
 </script>
 
 <template>
     <div>
-        <div>type hier de letters die nu in het spel zijn (punt = blanco):</div>
-        <textarea
-            v-model="inputLetters"
-            class="block-counter__wf-input"
-            @input="emitletters"
-            rows="15"
-            cols="24"
-        ></textarea>
         <div>type hier de letters die je zelf hebt:</div>
-        <textarea
+        <input type="text"
             v-model="inputOwnLetters"
             class="block-counter__wf-input"
-            @input="emitletters"
-            rows="1"
-            cols="10"
-        ></textarea>
+            @keydown="checkInput"
+            @input="updateletters"
+            maxlength="7"
+        >
     </div>
 </template>

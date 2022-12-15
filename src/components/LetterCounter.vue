@@ -1,24 +1,17 @@
 <script setup lang="ts">
     import LetterBlock from './LetterBlock.vue'
     import LetterInput from './LetterInput.vue'
+    import TiledBoard from './TiledBoard.vue'
     import { useLetterStore } from '../stores/letters'
+    import { onMounted } from 'vue';
 
+    let opponent: string = ''
     const store = useLetterStore()
     
-    let opponent: string = ''
-
-    const updateLetters = (letters: string): void => {
-        const letterArray = letters.split(/\s*/)
-        const letterMap = new Map<string, number>()
-        letterArray.forEach((l: string) => {
-            const prop = l.toUpperCase()
-            letterMap.set(prop, (letterMap.get(prop) || 0) + 1)
-        })
-        store.letterlist.forEach(l=> {
-            const prop = l.id.toUpperCase()
-            store.updateLetter({ letter: prop, used: letterMap.get(prop) || 0 })
-        })
-    }
+    onMounted(() => {
+        store.init()
+        opponent = ''
+    })
 </script>
 
 <template>
@@ -35,7 +28,8 @@
                 :letter="letter"
             ></letter-block>
         </div>
-        <LetterInput @letterschanged="updateLetters($event)"></LetterInput>
+        <TiledBoard></TiledBoard>
+        <LetterInput></LetterInput>
     </div>
 </template>
 
@@ -43,8 +37,11 @@
 .block-counter {
     margin: 0;
     padding: 0;
-    text-align: center;
     width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+
     &__header {
         margin-bottom: 6px;
     }
@@ -69,8 +66,11 @@
     }
 
     &__wf-input {
-        font-family: 'Source Code Pro', 'Courier New', Courier, monospace;
-        line-height: 1.6rem;
+        font-family: "Avenir", Helvetica, Arial, sans-serif;
+        width: 8em;
+        text-align: center;
+        min-width: 160px;
+        line-height: 1.3em;
         font-size: 1.4em;
         text-transform: uppercase;
         letter-spacing: 0.3em;
@@ -125,12 +125,10 @@
         }
     }
     &__count {
-        height: 0.9rem;
-        width: 0.95rem;
-        line-height: 1rem;
+        height: 1.1rem;
+        width: 1.1rem;
+        line-height: 1.2rem;
         background-color: #c41414;
-        border: 0.1rem solid;
-        border-color: #f75d5d #a80c0c #8d0303 #e94545;
         border-radius: 50%;
         position: absolute;
         bottom: -5px;

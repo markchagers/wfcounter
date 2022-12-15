@@ -10,7 +10,7 @@ interface ILetter {
 export const useLetterStore = defineStore('letters', { 
     
     state: () => ({
-        letterlist: _letterlist
+        letterlist: [..._letterlist]
     }),
 
     getters: {
@@ -19,15 +19,31 @@ export const useLetterStore = defineStore('letters', {
         },
         remainingLetters(state) {
             return state.letterlist.filter(l => l.used !== l.aantal)
+        },
+        usedLetters(state) {
+            return state.letterlist.filter(l => l.used > 0)
+        },
+        letterById(state) {
+            return (id: string) => state.letterlist.find(l => l.id === id.toUpperCase())
         }
     },
 
     actions: {
-        updateLetter(payload: { letter: string; used: number }): void {
-            const il = this.letters.find((l) => l.id === payload.letter)
-            if (il) {
-                const idx = this.letters.findIndex((l) => l.id === il.id)
-                this.letters.splice(idx, 1, { id: il.id, aantal: il.aantal, score: il.score, used: payload.used })
+        init(): void {
+            this.letterlist = [..._letterlist]
+        },
+        updateLetter(payload: { letter?: string; oldletter?: string }): void {
+            if (payload.letter) {
+                const il = this.letterlist.find((l) => l.id === payload.letter?.toUpperCase())
+                if (il) {
+                    il.used += 1
+                }
+            }
+            if (payload.oldletter) {
+                const ol = this.letterlist.find((l) => l.id === payload.oldletter?.toUpperCase())
+                if (ol) {
+                    ol.used -= 1
+                }
             }
         }
     }

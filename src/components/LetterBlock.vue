@@ -13,9 +13,7 @@
 
     const remaining = (): number => Math.abs(props.letter.aantal - props.letter.used)
 
-    const blockClass = (): string => props.letter.aantal < props.letter.used
-        ? 'block-counter__blokje error'
-        : 'block-counter__blokje'
+    const blockClass = (): string => props.letter.aantal < props.letter.used ? 'error' : ''
 
     const countClass = (): string => {
         const remain = props.letter.aantal - props.letter.used
@@ -32,7 +30,7 @@
 </script>
 
 <template>
-    <div :class="blockClass()" @click="$emit('addLetter', letter.id)">
+    <div class="block-counter__blokje" :class="blockClass()">
         <span class="block-counter__letter">{{ letter.id }}</span>
         <span class="block-counter__punten">{{ letter.score }}</span>
         <span :class="countClass()">{{

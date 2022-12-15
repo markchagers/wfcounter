@@ -14,7 +14,6 @@ If I have time and I feel motivated, I may add more functionality such as the ab
 ## Ideas
 
 - Save game
-- Tiled input field
 - Better Mobile support
 - Read Screenshot
 
