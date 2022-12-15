@@ -61,7 +61,7 @@ import { useLetterStore } from '@/stores/letters'
             break
             
             default:
-                if (/^[a-z]{1}$/i.test(evt.key)) {
+                if (/^[a-z.]$/i.test(evt.key)) {
                     if (letter.value) {
                         store.updateLetter({ letter: evt.key, oldletter: letter.value.id })
                     } else {
@@ -100,13 +100,14 @@ import { useLetterStore } from '@/stores/letters'
 .tile {
     background: linear-gradient(#222, #282828);
     flex: 0 0 28px;
+    max-height: 28px;
     color: white;
     margin: -1px;
     border: 2px solid black;
     border-radius: 4px;
     font-weight: 900;
     font-size: 12px;
-    line-height: 26px;
+    line-height: 28px;
     transition: .25s;
     position: relative;
 
@@ -164,6 +165,8 @@ import { useLetterStore } from '@/stores/letters'
     }
 
     .white {
+        height: 100%;
+        line-height: 30px;
         font-size: 1.4em;
         font-weight: 600;
         border-radius: 3px;
