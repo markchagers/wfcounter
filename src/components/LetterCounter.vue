@@ -37,10 +37,11 @@
 .block-counter {
     margin: 0;
     padding: 0;
-    width: 100%;
+    width: 100vw;
     display: flex;
     flex-flow: column nowrap;
-    align-items: center;
+    align-items: stretch;
+    row-gap: 10px;
 
     &__header {
         margin-bottom: 6px;
@@ -49,7 +50,7 @@
         display: flex;
         flex-flow: row wrap;
         justify-content: space-between;
-        gap: 10px;
+        gap: 6px;
         margin: 0 6%;
         text-align: center;
         margin-bottom: 16px;
