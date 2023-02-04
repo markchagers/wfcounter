@@ -1,15 +1,11 @@
 import { defineStore } from 'pinia'
 
-interface ILetter {
-    id: string
-    aantal: number
-    score: number
-    used: number
-}
+import type { ILetter } from '@/model/i-letter';
 
 export const useLetterStore = defineStore('letters', { 
     
     state: () => ({
+        letterString: _letterString,
         letterlist: [..._letterlist]
     }),
 
@@ -49,6 +45,7 @@ export const useLetterStore = defineStore('letters', {
     }
 })
 
+const _letterString = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ.'
 const _letterlist: ILetter[] = [
     {
         id: "A",
