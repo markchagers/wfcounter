@@ -3,12 +3,7 @@
     import { ref } from 'vue';
     import LetterTile from './LetterTile.vue'
 
-    interface ILetter {
-        id: string
-        aantal: number
-        score: number
-        used: number
-    }
+    import type { ILetter } from '@/model/i-letter';
 
     interface Cell {
         col: number
@@ -23,13 +18,14 @@
     }
     const rows: Row[] = []
 
+    const rowColCount = 15
     const store = useBoardStore()
     const focusedCell = ref<Cell>({ col: 0, row: 0 })
     const focusDelta = ref<Cell>({ col: 0, row: 0 })
 
-    for (let r = 0; r < 15; r++) {
+    for (let r = 0; r < rowColCount; r++) {
         const row: Row = { id: `row_${r + 1}`, cells: [] }
-        for (let c = 0; c < 15; c++) {
+        for (let c = 0; c < rowColCount; c++) {
             const cell: Cell = { col: c, row: r, cellClass: store.getTile(r, c) }
             row.cells.push(cell)
         }
@@ -47,8 +43,8 @@
     }
 
     const setLetter = () => {
-        const col = focusedCell.value.col + focusDelta.value.col
-        const row = focusedCell.value.row + focusDelta.value.row  
+        const col = Math.min(rowColCount - 1, Math.max(focusedCell.value.col + focusDelta.value.col, 0))
+        const row = Math.min(rowColCount - 1, Math.max(focusedCell.value.row + focusDelta.value.row, 0))
         focusedCell.value = { col, row }
     }
 </script>
@@ -70,15 +66,15 @@
 
 <style lang="scss">
     .board {
+        width: fit-content;
         margin: 0 auto;
-        width: 450px;
         background-color: #222;
         border: 4px solid black;
         display: flex;
         flex-flow: column nowrap;
     
         &__row {
-            flex: 1 1 28px;
+            flex: 1 1 auto;
             width: fit-content;
             display: flex;
             flex-flow: row nowrap;

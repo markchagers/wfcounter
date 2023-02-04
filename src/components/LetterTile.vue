@@ -2,12 +2,7 @@
 import { nextTick, ref, watch } from 'vue'
 import { useLetterStore } from '@/stores/letters'
 
-    interface ILetter {
-        id: string
-        aantal: number
-        score: number
-        used: number
-    }
+    import type { ILetter } from '@/model/i-letter';
 
     interface Cell {
         col: number
@@ -92,9 +87,9 @@ import { useLetterStore } from '@/stores/letters'
 
 <template>
     <div class="tile" ref="tilediv" @click="setFocus" @keydown.prevent="listen($event)" tabindex="-1">
-        <div v-if="!letter" :class="cell.cellClass"></div>
-        <div v-else class="white">
-            <span>{{ letter.id.toUpperCase() }}</span>
+        <div v-if="!letter" class="content" :class="cell.cellClass"></div>
+        <div v-else class="content white">
+            <span class="letter">{{ letter.id.toUpperCase() }}</span>
             <span class="score">{{ letter.score || '' }}</span>
         </div>
     </div>
@@ -103,15 +98,13 @@ import { useLetterStore } from '@/stores/letters'
 <style lang="scss">
 .tile {
     background: linear-gradient(#222, #282828);
-    flex: 0 0 28px;
-    max-height: 28px;
+    flex: 0 0 auto;
     color: white;
     margin: -1px;
     border: 2px solid black;
     border-radius: 4px;
-    font-weight: 900;
-    font-size: 12px;
-    line-height: 28px;
+    width: 24px;
+    aspect-ratio: 1 / 1;
     transition: .25s;
     position: relative;
 
@@ -121,8 +114,18 @@ import { useLetterStore } from '@/stores/letters'
         border-color: #55abfb;
     }
 
-    .dw {
+    .content {
+        font-weight: 900;
+        font-size: 1rem;
+        line-height: 1rem;
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1 / 1;
         border-radius: 3px;
+        line-height: 2.3rem;
+    }
+
+    .dw {
         background: linear-gradient(#ad681c, #c37828);
 
         &::before {
@@ -131,7 +134,6 @@ import { useLetterStore } from '@/stores/letters'
     }
 
     .tw {
-        border-radius: 3px;
         background: linear-gradient(#6e3131, #7e3b3b);
 
         &::before {
@@ -140,7 +142,6 @@ import { useLetterStore } from '@/stores/letters'
     }
 
     .dl {
-        border-radius: 3px;
         background: linear-gradient(#66905c, #6b9661);
 
         &::before {
@@ -149,7 +150,6 @@ import { useLetterStore } from '@/stores/letters'
     }
 
     .tl {
-        border-radius: 3px;
         background: linear-gradient(#405690, #475d9c);
 
         &::before {
@@ -158,10 +158,9 @@ import { useLetterStore } from '@/stores/letters'
     }
 
     .cc {
-        border-radius: 3px;
         background: linear-gradient(#233462, #2c3c69);
         color: #c47893;
-        font-size: 1.5em;
+        font-size: 1.5rem;
 
         &::before {
             content: '❖';
@@ -169,20 +168,23 @@ import { useLetterStore } from '@/stores/letters'
     }
 
     .white {
-        height: 100%;
-        line-height: 30px;
-        font-size: 1.4em;
-        font-weight: 600;
-        border-radius: 3px;
         color: #222;
         background: linear-gradient(#fcffe6, #fefef4);
 
+        .letter {
+            display: block;
+            padding-top: .3rem;
+            font-size: 1.6rem;
+            line-height: 2rem;
+            font-weight: 600;
+        }
+
         .score {
             position: absolute;
-            line-height: .7em;
-            top: 2px;
-            right: 1px;
-            font-size: .6em;
+            top: -.6rem;
+            right: 0.1rem;
+            font-size: .9rem;
+            font-weight: 600;
         }
     }
 }

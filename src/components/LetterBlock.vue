@@ -1,11 +1,6 @@
 <script setup lang="ts">
 
-    interface ILetter {
-        id: string
-        aantal: number
-        score: number
-        used: number
-    }
+    import type { ILetter } from '@/model/i-letter';
 
     const props = defineProps<{
         letter: ILetter
@@ -38,3 +33,69 @@
         }}</span>
     </div>
 </template>
+
+<style lang="scss">
+.block-counter {
+    &__blokje {
+        flex: 0 1 auto;
+        position: relative;
+        width: 3rem;
+        aspect-ratio: 1 / 1;
+        background-color: antiquewhite;
+        box-shadow: 2px 1px 5px rgba(0, 0, 0, 0.5);
+        border: solid 1px;
+        border-color: beige #aa9226 #aa9226 beige;
+        border-radius: 0.3rem;
+
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        align-items: center;
+
+        @media (min-width: 500px) {
+            width: 3.2rem;
+        }
+        &.error {
+            background-color: rgb(189, 3, 105);
+            color: whitesmoke;
+            border-color: #ffb1d1 #410126 #410126 #ffb1d1;
+        }
+    }
+    &__letter {
+        width: 100%;
+        font-weight: 500;
+        font-size: 1.8rem;
+        @media (min-width: 500px) {
+            font-size: 2rem;
+        }
+    }
+    &__punten {
+        position: absolute;
+        top: -.2rem;
+        right: 0.2rem;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+    &__count {
+        height: 1.5rem;
+        width: 1.5rem;
+        line-height: 1.6rem;
+        background-color: #c41414;
+        border-radius: 50%;
+        position: absolute;
+        bottom: -.4rem;
+        left: -.5rem;
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #fafdd8;
+        box-shadow: 1px 2px 4px #00000099;
+        &.error {
+            color: #fffebf;
+        }
+        &--hide {
+            display: none;
+        }
+    }
+}
+</style>
