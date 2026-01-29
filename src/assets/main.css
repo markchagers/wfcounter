@@ -1,13 +1,15 @@
 html {
-    font-size: 62.5%;
+    font-size: 100%;
 }
 
 body {
+    container-name: remaining;
+    container-type: inline-size;
     margin: 0;
     padding: 0;
     background-color: rgb(180, 216, 192);
-    font-size: 1.6rem;
 }
+
 #app {
     margin: 0;
     padding: 0;

@@ -52,19 +52,14 @@
 <template>
     <div class="board">
         <div class="board__row" v-for="row in rows" :key="row.id">
-            <LetterTile  v-for="cell in row.cells" 
-            :key="`${cell.row}-${cell.col}`" 
-            :cell="cell"
-            :focusedcell="focusedCell"
-            @movefocus="moveCellFocus($event)"
-            @setfocus="setCellFocus($event)"
-            @setletter="setLetter"
-            ></LetterTile>
+            <LetterTile v-for="cell in row.cells" :key="`${cell.row}-${cell.col}`" :cell="cell"
+                :focusedcell="focusedCell" @movefocus="moveCellFocus($event)" @setfocus="setCellFocus($event)"
+                @setletter="setLetter"></LetterTile>
         </div>
     </div>
 </template>
 
-<style lang="scss">
+<style lang="css">
     .board {
         width: fit-content;
         margin: 0 auto;
@@ -72,8 +67,8 @@
         border: 4px solid black;
         display: flex;
         flex-flow: column nowrap;
-    
-        &__row {
+
+        & .board__row {
             flex: 1 1 auto;
             width: fit-content;
             display: flex;
